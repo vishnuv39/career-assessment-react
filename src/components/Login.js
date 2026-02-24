@@ -1,0 +1,60 @@
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    if (!email || !password) {
+      alert("Enter email and password");
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const validUser = users.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (!validUser) {
+      alert("Invalid credentials");
+      return;
+    }
+
+    login(email);
+    navigate("/dashboard");
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-80">
+        <h2 className="text-2xl font-bold text-center mb-6">CareerAI Login</h2>
+
+        <input
+          type="email"
+          placeholder="Enter email"
+          className="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="Enter password"
+          className="w-full p-3 border rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button
+          onClick={handleLogin}
+          className="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition"
+        >
+          Login
+        </button>
+      </div>
+    </div>
+  );
+}
