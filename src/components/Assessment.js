@@ -1,392 +1,416 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-/* ================= DECISION TREE ================= */
+/* ================= ASSESSMENT SECTIONS ================= */
 
-const questionTree = {
-  // ===== LEVEL 1 =====
-  start: {
-    q: "Which field interests you most?",
-    options: [
-      { text: "Technology", next: "tech2" },
-      { text: "Medical", next: "med2" },
-      { text: "Business", next: "bus2" },
-      { text: "Arts", next: "arts2" },
-    ],
+const sections = [
+  {
+    name: "Technical Skills",
+    icon: "💻",
+    color: "from-blue-400 to-indigo-500",
+    questions: [
+      {
+        q: "Which task would you naturally continue without interruption?",
+        options: [
+          { text: "Refining system performance", scores: { "Backend Engineer": 5 } },
+          { text: "Designing interactive interfaces", scores: { "Frontend Engineer": 5 } },
+          { text: "Extracting insights from data", scores: { "Data Scientist": 5 } },
+          { text: "Building complete applications", scores: { "Full Stack Engineer": 5 } }
+        ]
+      },
+      {
+        q: "Which approach feels most intuitive?",
+        options: [
+          { text: "Structured logic", scores: { "Backend Engineer": 5 } },
+          { text: "Pattern exploration", scores: { "Data Analyst": 5 } },
+          { text: "Predictive modeling", scores: { "ML Engineer": 5 } },
+          { text: "Intelligent systems", scores: { "AI Engineer": 5 } }
+        ]
+      },
+      {
+        q: "Which environment feels engaging?",
+        options: [
+          { text: "System architecture", scores: { "Backend Engineer": 5 } },
+          { text: "User experience", scores: { "UI/UX Designer": 5 } },
+          { text: "Visual design", scores: { "Graphic Designer": 5 } },
+          { text: "End-to-end dev", scores: { "Full Stack Engineer": 5 } }
+        ]
+      },
+      {
+        q: "Select tasks you resonate with",
+        multi: true,
+        options: [
+          { text: "Debugging systems", scores: { "Backend Engineer": 3 } },
+          { text: "Designing layouts", scores: { "UI/UX Designer": 3 } },
+          { text: "Analyzing data", scores: { "Data Scientist": 3 } },
+          { text: "Building apps", scores: { "Full Stack Engineer": 3 } }
+        ]
+      },
+      {
+        q: "Which challenge attracts you most?",
+        options: [
+          { text: "Backend efficiency", scores: { "Backend Engineer": 5 } },
+          { text: "User interaction", scores: { "Frontend Engineer": 5 } },
+          { text: "Prediction systems", scores: { "ML Engineer": 5 } },
+          { text: "AI solutions", scores: { "AI Engineer": 5 } }
+        ]
+      }
+    ]
   },
 
-  /* ================= TECHNOLOGY ================= */
-
-  tech2: {
-    q: "What type of tech problems excite you?",
-    options: [
-      { text: "Building software products", next: "tech3_soft" },
-      { text: "Working with data & intelligence", next: "tech3_ai" },
-    ],
+  {
+    name: "Communication Skills",
+    icon: "💬",
+    color: "from-green-400 to-teal-500",
+    questions: [
+      {
+        q: "In a team, what role feels natural?",
+        options: [
+          { text: "Planning structure", scores: { "Product Manager": 5 } },
+          { text: "Influencing people", scores: { "Marketing Manager": 5 } },
+          { text: "Managing execution", scores: { "Operations Manager": 5 } },
+          { text: "Silent execution", scores: { "Backend Engineer": 3 } }
+        ]
+      },
+      {
+        q: "Which interaction suits you?",
+        options: [
+          { text: "Presenting ideas", scores: { "Marketing Manager": 5 } },
+          { text: "Aligning teams", scores: { "Product Manager": 5 } },
+          { text: "Coordinating ops", scores: { "Operations Manager": 5 } },
+          { text: "Independent work", scores: { "Data Scientist": 3 } }
+        ]
+      },
+      {
+        q: "Select scenarios you enjoy",
+        multi: true,
+        options: [
+          { text: "Leading discussions", scores: { "Product Manager": 3 } },
+          { text: "Convincing people", scores: { "Marketing Manager": 3 } },
+          { text: "Organizing work", scores: { "Operations Manager": 3 } },
+          { text: "Analyzing quietly", scores: { "Data Analyst": 3 } }
+        ]
+      },
+      {
+        q: "Your communication style?",
+        options: [
+          { text: "Persuasive", scores: { "Marketing Manager": 5 } },
+          { text: "Strategic", scores: { "Product Manager": 5 } },
+          { text: "Structured", scores: { "Operations Manager": 5 } },
+          { text: "Minimal", scores: { "Backend Engineer": 3 } }
+        ]
+      },
+      {
+        q: "What energizes you?",
+        options: [
+          { text: "Driving product vision", scores: { "Product Manager": 5 } },
+          { text: "Market impact", scores: { "Marketing Manager": 5 } },
+          { text: "Efficient systems", scores: { "Operations Manager": 5 } },
+          { text: "Behind-the-scenes work", scores: { "Data Analyst": 3 } }
+        ]
+      }
+    ]
   },
 
-  // ---- SOFTWARE PATH
-  tech3_soft: {
-    q: "Which part of software do you enjoy more?",
-    options: [
-      { text: "User interfaces & visuals", next: "tech4_ui" },
-      { text: "Server logic & systems", next: "tech4_backend" },
-    ],
+  {
+    name: "Mental Ability",
+    icon: "🧠",
+    color: "from-purple-400 to-pink-500",
+    questions: [
+      {
+        q: "Which problem type engages you?",
+        options: [
+          { text: "System design", scores: { "Backend Engineer": 5 } },
+          { text: "Pattern detection", scores: { "Data Scientist": 5 } },
+          { text: "Abstract logic", scores: { "ML Engineer": 5 } },
+          { text: "Decision systems", scores: { "AI Engineer": 5 } }
+        ]
+      },
+      {
+        q: "Thinking approach?",
+        options: [
+          { text: "Sequential", scores: { "Backend Engineer": 5 } },
+          { text: "Analytical", scores: { "Data Scientist": 5 } },
+          { text: "Experimental", scores: { "Startup Founder": 5 } },
+          { text: "Creative", scores: { "Frontend Engineer": 5 } }
+        ]
+      },
+      {
+        q: "Select mental activities",
+        multi: true,
+        options: [
+          { text: "Numbers", scores: { "Data Analyst": 3 } },
+          { text: "Logic", scores: { "ML Engineer": 3 } },
+          { text: "Creativity", scores: { "UI/UX Designer": 3 } },
+          { text: "Decisions", scores: { "Product Manager": 3 } }
+        ]
+      },
+      {
+        q: "Which task feels natural?",
+        options: [
+          { text: "Algorithms", scores: { "ML Engineer": 5 } },
+          { text: "Trends", scores: { "Data Analyst": 5 } },
+          { text: "Systems", scores: { "Backend Engineer": 5 } },
+          { text: "Designing UX", scores: { "UI/UX Designer": 5 } }
+        ]
+      },
+      {
+        q: "Which appeals more?",
+        options: [
+          { text: "Data uncertainty", scores: { "Data Scientist": 5 } },
+          { text: "Logical frameworks", scores: { "Backend Engineer": 5 } },
+          { text: "User experiences", scores: { "Frontend Engineer": 5 } },
+          { text: "AI experiments", scores: { "AI Engineer": 5 } }
+        ]
+      }
+    ]
   },
 
-  tech4_ui: {
-    q: "What describes you best?",
-    options: [
-      { text: "Creative & design-oriented", next: "tech5_ui" },
-      { text: "Detail-focused builder", next: "tech5_ui" },
-    ],
-  },
+  {
+    name: "Personality & Interests",
+    icon: "🎯",
+    color: "from-orange-400 to-red-500",
+    questions: [
+      {
+        q: "Which situation feels fulfilling?",
+        options: [
+          { text: "New ventures", scores: { "Startup Founder": 5 } },
+          { text: "User experience design", scores: { "UI/UX Designer": 5 } },
+          { text: "Helping patients", scores: { "General Physician": 5 } },
+          { text: "Scientific research", scores: { "Medical Researcher": 5 } }
+        ]
+      },
+      {
+        q: "What drives you?",
+        options: [
+          { text: "Innovation", scores: { "Startup Founder": 5 } },
+          { text: "Creativity", scores: { "Graphic Designer": 5 } },
+          { text: "Accuracy", scores: { "Radiologist": 5 } },
+          { text: "Human impact", scores: { "General Physician": 5 } }
+        ]
+      },
+      {
+        q: "Select what resonates",
+        multi: true,
+        options: [
+          { text: "Building systems", scores: { "Full Stack Engineer": 3 } },
+          { text: "Leading work", scores: { "Product Manager": 3 } },
+          { text: "Helping people", scores: { "General Physician": 3 } },
+          { text: "Researching", scores: { "Medical Researcher": 3 } }
+        ]
+      },
+      {
+        q: "Closest identity?",
+        options: [
+          { text: "Innovator", scores: { "Startup Founder": 5 } },
+          { text: "Creator", scores: { "UI/UX Designer": 5 } },
+          { text: "Analyzer", scores: { "Data Scientist": 5 } },
+          { text: "Healer", scores: { "General Physician": 5 } }
+        ]
+      },
+      {
+        q: "Meaningful path?",
+        options: [
+          { text: "Building products", scores: { "Full Stack Engineer": 5 } },
+          { text: "Designing visuals", scores: { "Graphic Designer": 5 } },
+          { text: "Scientific work", scores: { "Medical Researcher": 5 } },
+          { text: "Diagnostics", scores: { "Radiologist": 5 } }
+        ]
+      }
+    ]
+  }
+];
 
-  tech5_ui: {
-    q: "Which role fits you most?",
-    options: [
-      { text: "Frontend Engineer", next: "result" },
-      { text: "UI Engineer", next: "result" },
-    ],
-  },
-
-  tech4_backend: {
-    q: "Which backend area interests you?",
-    options: [
-      { text: "APIs & application logic", next: "tech5_backend" },
-      { text: "Databases & scalability", next: "tech5_backend" },
-    ],
-  },
-
-  tech5_backend: {
-    q: "Which role fits you most?",
-    options: [
-      { text: "Backend Engineer", next: "result" },
-      { text: "Full Stack Engineer", next: "result" },
-    ],
-  },
-
-  // ---- AI PATH
-  tech3_ai: {
-    q: "What attracts you more?",
-    options: [
-      { text: "Analyzing data patterns", next: "tech4_data" },
-      { text: "Building intelligent models", next: "tech4_ml" },
-    ],
-  },
-
-  tech4_data: {
-    q: "Your strongest trait?",
-    options: [
-      { text: "Statistics & insights", next: "tech5_data" },
-      { text: "Visualization & storytelling", next: "tech5_data" },
-    ],
-  },
-
-  tech5_data: {
-    q: "Which role fits you most?",
-    options: [
-      { text: "Data Analyst", next: "result" },
-      { text: "Data Scientist", next: "result" },
-    ],
-  },
-
-  tech4_ml: {
-    q: "What excites you most?",
-    options: [
-      { text: "Training ML models", next: "tech5_ml" },
-      { text: "Deploying AI systems", next: "tech5_ml" },
-    ],
-  },
-
-  tech5_ml: {
-    q: "Which role fits you most?",
-    options: [
-      { text: "ML Engineer", next: "result" },
-      { text: "AI Engineer", next: "result" },
-    ],
-  },
-
-  /* ================= MEDICAL ================= */
-
-  med2: {
-    q: "Which aspect of medicine interests you?",
-    options: [
-      { text: "Treating patients directly", next: "med3_clinical" },
-      { text: "Medical discovery & testing", next: "med3_research" },
-    ],
-  },
-
-  med3_clinical: {
-    q: "Which environment do you prefer?",
-    options: [
-      { text: "General patient care", next: "med4_phys" },
-      { text: "Surgical procedures", next: "med4_surg" },
-    ],
-  },
-
-  med4_phys: {
-    q: "Your natural strength?",
-    options: [
-      { text: "Patient communication", next: "med5_phys" },
-      { text: "Diagnosis & treatment", next: "med5_phys" },
-    ],
-  },
-
-  med5_phys: {
-    q: "Best career match?",
-    options: [
-      { text: "General Physician", next: "result" },
-      { text: "Specialist Doctor", next: "result" },
-    ],
-  },
-
-  med4_surg: {
-    q: "What suits you most?",
-    options: [
-      { text: "Precision procedures", next: "med5_surg" },
-      { text: "High-pressure operations", next: "med5_surg" },
-    ],
-  },
-
-  med5_surg: {
-    q: "Best career match?",
-    options: [
-      { text: "Surgeon", next: "result" },
-      { text: "Surgical Specialist", next: "result" },
-    ],
-  },
-
-  med3_research: {
-    q: "Which research area attracts you?",
-    options: [
-      { text: "Drug & pharmaceutical research", next: "med4_research" },
-      { text: "Medical imaging & diagnostics", next: "med4_research" },
-    ],
-  },
-
-  med4_research: {
-    q: "Your key strength?",
-    options: [
-      { text: "Lab experimentation", next: "med5_research" },
-      { text: "Analytical investigation", next: "med5_research" },
-    ],
-  },
-
-  med5_research: {
-    q: "Best career match?",
-    options: [
-      { text: "Medical Researcher", next: "result" },
-      { text: "Radiologist", next: "result" },
-    ],
-  },
-
-  /* ================= BUSINESS ================= */
-
-  bus2: {
-    q: "What excites you most in business?",
-    options: [
-      { text: "Building new ventures", next: "bus3_startup" },
-      { text: "Managing large organizations", next: "bus3_corp" },
-    ],
-  },
-
-  bus3_startup: {
-    q: "Which role appeals to you?",
-    options: [
-      { text: "Creating new products", next: "bus4_startup" },
-      { text: "Growing the business", next: "bus4_startup" },
-    ],
-  },
-
-  bus4_startup: {
-    q: "Your strongest trait?",
-    options: [
-      { text: "Risk taking", next: "bus5_startup" },
-      { text: "Innovation mindset", next: "bus5_startup" },
-    ],
-  },
-
-  bus5_startup: {
-    q: "Best career match?",
-    options: [
-      { text: "Startup Founder", next: "result" },
-      { text: "Product Manager", next: "result" },
-    ],
-  },
-
-  bus3_corp: {
-    q: "Which corporate function interests you?",
-    options: [
-      { text: "Operations & execution", next: "bus4_corp" },
-      { text: "Marketing & growth", next: "bus4_corp" },
-    ],
-  },
-
-  bus4_corp: {
-    q: "Your natural strength?",
-    options: [
-      { text: "Leadership", next: "bus5_corp" },
-      { text: "Communication", next: "bus5_corp" },
-    ],
-  },
-
-  bus5_corp: {
-    q: "Best career match?",
-    options: [
-      { text: "Operations Manager", next: "result" },
-      { text: "Marketing Manager", next: "result" },
-    ],
-  },
-
-  /* ================= ARTS ================= */
-
-  arts2: {
-    q: "Which creative direction attracts you?",
-    options: [
-      { text: "Visual design", next: "arts3_design" },
-      { text: "Animation & motion", next: "arts3_anim" },
-    ],
-  },
-
-  arts3_design: {
-    q: "What type of design do you enjoy?",
-    options: [
-      { text: "User experience design", next: "arts4_design" },
-      { text: "Brand & graphic design", next: "arts4_design" },
-    ],
-  },
-
-  arts4_design: {
-    q: "Your strongest trait?",
-    options: [
-      { text: "User empathy", next: "arts5_design" },
-      { text: "Visual creativity", next: "arts5_design" },
-    ],
-  },
-
-  arts5_design: {
-    q: "Best career match?",
-    options: [
-      { text: "UI/UX Designer", next: "result" },
-      { text: "Graphic Designer", next: "result" },
-    ],
-  },
-
-  arts3_anim: {
-    q: "Which animation style excites you?",
-    options: [
-      { text: "2D storytelling", next: "arts4_anim" },
-      { text: "3D world building", next: "arts4_anim" },
-    ],
-  },
-
-  arts4_anim: {
-    q: "Your key strength?",
-    options: [
-      { text: "Storyboarding", next: "arts5_anim" },
-      { text: "Motion dynamics", next: "arts5_anim" },
-    ],
-  },
-
-  arts5_anim: {
-    q: "Best career match?",
-    options: [
-      { text: "2D Animator", next: "result" },
-      { text: "3D Animator", next: "result" },
-    ],
-  },
-};
 /* ================= COMPONENT ================= */
 
 export default function Assessment() {
   const navigate = useNavigate();
-  const [path, setPath] = useState(["start"]);
-  const [answers, setAnswers] = useState([]);
+  const [currentSection, setCurrentSection] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [scores, setScores] = useState({});
+  const [selections, setSelections] = useState({});
 
-  const currentKey = path[path.length - 1];
-  const currentQuestion = questionTree[currentKey];
-  const step = path.length - 1;
-  const progress = (path.length / 5) * 100;
+  const section = sections[currentSection];
+  const question = section.questions[currentQuestion];
+  const totalQuestions = sections.reduce((sum, s) => sum + s.questions.length, 0);
+  const currentQuestionIndex = sections.slice(0, currentSection).reduce((sum, s) => sum + s.questions.length, 0) + currentQuestion + 1;
+  const progress = (currentQuestionIndex / totalQuestions) * 100;
 
-  const handleSelect = (option) => {
-    const updated = [...answers];
-    updated[step] = option.text;
-    setAnswers(updated);
+  const handleSelect = (optionIndex, isMulti) => {
+    if (isMulti) {
+      const currentSelections = selections[`${currentSection}-${currentQuestion}`] || [];
+      const newSelections = currentSelections.includes(optionIndex)
+        ? currentSelections.filter(i => i !== optionIndex)
+        : [...currentSelections, optionIndex];
+      setSelections({ ...selections, [`${currentSection}-${currentQuestion}`]: newSelections });
+    } else {
+      setSelections({ ...selections, [`${currentSection}-${currentQuestion}`]: [optionIndex] });
+    }
   };
 
   const handleNext = () => {
-    if (!answers[step]) return alert("Please select an option");
+    const currentSelections = selections[`${currentSection}-${currentQuestion}`] || [];
+    if (currentSelections.length === 0) return alert("Please select an option");
 
-    const selected = currentQuestion.options.find(
-      (o) => o.text === answers[step]
-    );
+    // Add scores
+    const newScores = { ...scores };
+    currentSelections.forEach(index => {
+      const option = question.options[index];
+      Object.entries(option.scores).forEach(([career, points]) => {
+        newScores[career] = (newScores[career] || 0) + points;
+      });
+    });
+    setScores(newScores);
 
-    if (selected.next === "result") {
-      navigate("/result", { state: answers });
+    // Move to next
+    if (currentQuestion < section.questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    } else if (currentSection < sections.length - 1) {
+      setCurrentSection(currentSection + 1);
+      setCurrentQuestion(0);
     } else {
-      setPath([...path, selected.next]);
+      navigate("/result", { state: { scores: newScores } });
     }
   };
 
   const handlePrev = () => {
-    if (path.length === 1) navigate("/dashboard");
-    else setPath(path.slice(0, -1));
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+    } else if (currentSection > 0) {
+      setCurrentSection(currentSection - 1);
+      setCurrentQuestion(sections[currentSection - 1].questions.length - 1);
+    } else {
+      navigate("/dashboard");
+    }
   };
 
+  const currentSelections = selections[`${currentSection}-${currentQuestion}`] || [];
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-400 to-blue-500 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-400 to-blue-500 px-4 py-8">
       
       {/* Progress */}
-      <div className="w-full max-w-xl mb-6">
-        <div className="w-full bg-white/30 rounded-full h-3">
+      <div className="w-full max-w-2xl mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center space-x-3">
+            <span className="text-2xl">{section.icon}</span>
+            <div>
+              <h2 className="text-xl font-bold text-white">{section.name}</h2>
+              <p className="text-white/80 text-sm">Question {currentQuestion + 1} of {section.questions.length}</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-white text-sm">Overall Progress</p>
+            <p className="text-white font-semibold">{currentQuestionIndex}/{totalQuestions}</p>
+          </div>
+        </div>
+        
+        <div className="w-full bg-white/30 rounded-full h-3 overflow-hidden">
           <div
-            className="bg-white h-3 rounded-full transition-all"
+            className="bg-white h-3 rounded-full transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
-        <p className="text-white text-center mt-2">
-          Question {step + 1} of 5
-        </p>
-      </div>
-
-      {/* Card */}
-      <div className="bg-white/95 backdrop-blur-md p-8 rounded-2xl shadow-xl max-w-xl w-full text-center">
-        <h2 className="text-2xl font-semibold mb-6">
-          {currentQuestion.q}
-        </h2>
-
-        <div className="grid gap-3 mb-6">
-          {currentQuestion.options.map((opt, i) => (
-            <button
-              key={i}
-              onClick={() => handleSelect(opt)}
-              className={`p-3 rounded-lg border transition ${
-                answers[step] === opt.text
-                  ? "bg-indigo-600 text-white border-indigo-600"
-                  : "hover:bg-indigo-50"
+        
+        {/* Section Progress Dots */}
+        <div className="flex justify-center mt-4 space-x-2">
+          {section.questions.map((_, idx) => (
+            <div
+              key={idx}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                idx === currentQuestion ? 'bg-white scale-125' : 'bg-white/50'
               }`}
-            >
-              {opt.text}
-            </button>
+            />
           ))}
         </div>
+      </div>
 
-        <div className="flex justify-between">
+      {/* Question Card */}
+      <div className={`bg-white/95 backdrop-blur-md p-8 rounded-3xl shadow-2xl max-w-2xl w-full transform transition-all duration-500 hover:scale-105`}>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-4 text-gray-800 leading-tight">
+            {question.q}
+          </h2>
+          {question.multi && (
+            <p className="text-indigo-600 font-medium">
+              Select all that apply ({currentSelections.length} selected)
+            </p>
+          )}
+        </div>
+
+        {/* Options */}
+        <div className={`grid gap-4 mb-8 ${question.multi ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+          {question.options.map((opt, i) => {
+            const isSelected = currentSelections.includes(i);
+            return (
+              <button
+                key={i}
+                onClick={() => handleSelect(i, question.multi)}
+                className={`group relative p-5 rounded-2xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                  isSelected
+                    ? `bg-gradient-to-r ${section.color} text-white border-transparent shadow-lg`
+                    : 'bg-white hover:bg-gray-50 border-gray-200 hover:border-indigo-300'
+                } ${question.multi ? 'cursor-pointer' : ''}`}
+              >
+                {question.multi && (
+                  <div className={`absolute top-3 right-3 w-6 h-6 rounded-full border-2 transition-all duration-300 ${
+                    isSelected ? 'bg-white border-white' : 'border-gray-300'
+                  }`}>
+                    {isSelected && (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${section.color}`} />
+                      </div>
+                    )}
+                  </div>
+                )}
+                <span className={`text-left font-medium ${isSelected ? 'text-white' : 'text-gray-700 group-hover:text-indigo-600'}`}>
+                  {opt.text}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Navigation */}
+        <div className="flex justify-between items-center">
           <button
             onClick={handlePrev}
-            className="px-6 py-2 rounded-lg bg-gray-200"
+            className="flex items-center space-x-2 px-6 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition-all duration-300 hover:scale-105"
           >
-            {path.length === 1 ? "Back" : "Previous"}
+            <span>←</span>
+            <span>{currentQuestionIndex === 1 ? "Back" : "Previous"}</span>
           </button>
 
           <button
             onClick={handleNext}
-            className="px-6 py-2 rounded-lg bg-indigo-600 text-white"
+            disabled={currentSelections.length === 0}
+            className={`flex items-center space-x-2 px-8 py-3 rounded-xl font-medium transition-all duration-300 transform ${
+              currentSelections.length === 0
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : `bg-gradient-to-r ${section.color} text-white hover:scale-105 shadow-lg`
+            }`}
           >
-            {path.length === 5 ? "Submit" : "Next"}
+            <span>{currentQuestionIndex === totalQuestions ? "Complete" : "Next"}</span>
+            <span>→</span>
           </button>
         </div>
+      </div>
+
+      {/* Section Indicator */}
+      <div className="mt-8 flex space-x-4">
+        {sections.map((sec, idx) => (
+          <div
+            key={idx}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${
+              idx === currentSection
+                ? `bg-white text-gray-800 shadow-lg`
+                : 'bg-white/20 text-white hover:bg-white/30'
+            }`}
+          >
+            <span>{sec.icon}</span>
+            <span className="text-sm font-medium">{sec.name}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

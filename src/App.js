@@ -7,8 +7,10 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
+import Profile from "./components/Profile";
 import Assessment from "./components/Assessment";
 import Result from "./components/Result";
+import Results from "./components/Results";
 
 
 function PrivateRoute({ children }) {
@@ -41,10 +43,28 @@ export default function App() {
           />
 
           <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
             path="/assessment"
             element={
               <PrivateRoute>
                 <Assessment />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/results"
+            element={
+              <PrivateRoute>
+                <Results />
               </PrivateRoute>
             }
           />
