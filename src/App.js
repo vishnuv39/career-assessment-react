@@ -69,7 +69,14 @@ export default function App() {
             }
           />
 
-          <Route path="/result" element={<Result />} />
+          <Route
+            path="/result"
+            element={
+              <PrivateRoute>
+                <Result />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

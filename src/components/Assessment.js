@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 /* ================= ASSESSMENT SECTIONS ================= */
 
@@ -225,6 +226,7 @@ const sections = [
 
 export default function Assessment() {
   const navigate = useNavigate();
+  const { showNotification } = useContext(AuthContext);
   const [currentSection, setCurrentSection] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [scores, setScores] = useState({});
@@ -250,7 +252,10 @@ export default function Assessment() {
 
   const handleNext = () => {
     const currentSelections = selections[`${currentSection}-${currentQuestion}`] || [];
-    if (currentSelections.length === 0) return alert("Please select an option");
+    if (currentSelections.length === 0) {
+      showNotification("Please select an option");
+      return;
+    }
 
     // Add scores
     const newScores = { ...scores };

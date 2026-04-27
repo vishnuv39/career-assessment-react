@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import { API } from "../api";
 
 export default function Signup() {
@@ -10,11 +11,12 @@ export default function Signup() {
   const [qualification, setQualification] = useState("");
   const [university, setUniversity] = useState("");
   const [gpa, setGpa] = useState("");
+  const { showNotification } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSignup = async () => {
     if (!email || !password || !profession || !mobile || !qualification || !university || !gpa) {
-      alert("Please fill all fields");
+      showNotification("Please fill all fields");
       return;
     }
 
@@ -42,10 +44,10 @@ export default function Signup() {
         throw new Error(data.message);
       }
 
-      alert("Signup successful");
+      showNotification("Signup successful");
       navigate("/login");
     } catch (err) {
-      alert(err.message);
+      showNotification(err.message);
     }
   };
 

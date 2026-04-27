@@ -6,12 +6,14 @@ import { API } from "../api";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useContext(AuthContext);
+  const [newPassword, setNewPassword] = useState("");
+  const [forgotMode, setForgotMode] = useState(false);
+  const { login, showNotification } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (!email || !password) {
-      alert("Enter email and password");
+      showNotification("Enter email and password");
       return;
     }
 
@@ -33,7 +35,34 @@ export default function Login() {
       navigate("/dashboard");
 
     } catch (err) {
-      alert(err.message);
+      showNotification(err.message);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!email || !newPassword) {
+      showNotification("Enter your email and a new password");
+      return;
+    }
+
+    try {
+      const res = await fetch(API.forgotPassword, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, newPassword })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || "Unable to reset password");
+      }
+
+      showNotification("Password updated successfully. Please log in.");
+      setForgotMode(false);
+      setPassword("");
+      setNewPassword("");
+    } catch (err) {
+      showNotification(err.message);
     }
   };
 
@@ -81,17 +110,24 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Password Field */}
+          {/* Password / New Password Field */}
           <div className="mb-8">
             <label className="block text-white/80 text-sm font-medium mb-2">
-              Password
+              {forgotMode ? "New Password" : "Password"}
             </label>
             <div className="relative">
               <input
                 type="password"
-                placeholder="Enter your password"
+                placeholder={forgotMode ? "Enter your new password" : "Enter your password"}
                 className="w-full p-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 transition-all duration-300"
-                onChange={(e) => setPassword(e.target.value)}
+                value={forgotMode ? newPassword : password}
+                onChange={(e) => {
+                  if (forgotMode) {
+                    setNewPassword(e.target.value);
+                  } else {
+                    setPassword(e.target.value);
+                  }
+                }}
               />
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                 <span className="text-white/50 text-lg">🔒</span>
@@ -99,25 +135,42 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Login Button */}
+          {/* Action Button */}
           <button
-            onClick={handleLogin}
+            onClick={forgotMode ? handleResetPassword : handleLogin}
             className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white p-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg mb-6"
           >
-            Sign In
+            {forgotMode ? "Reset Password" : "Sign In"}
           </button>
 
-          {/* Sign Up Link */}
-          <div className="text-center mt-6">
-            <p className="text-white/70">
-              Don't have an account?{" "}
+          {/* Sign Up / Forgot Password Links */}
+          <div className="text-center mt-6 space-y-3">
+            {forgotMode ? (
               <button
-                onClick={() => navigate("/signup")}
+                onClick={() => setForgotMode(false)}
                 className="text-white font-semibold hover:text-blue-200 transition-colors underline"
               >
-                Sign up here
+                Back to sign in
               </button>
-            </p>
+            ) : (
+              <div className="space-y-3">
+                <button
+                  onClick={() => setForgotMode(true)}
+                  className="text-white font-semibold hover:text-blue-200 transition-colors underline"
+                >
+                  Forgot password?
+                </button>
+                <p className="text-white/70">
+                  Don't have an account? 
+                  <button
+                    onClick={() => navigate("/signup")}
+                    className="text-white font-semibold hover:text-blue-200 transition-colors underline"
+                  >
+                    Sign up here
+                  </button>
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
