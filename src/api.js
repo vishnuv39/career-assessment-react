@@ -1,4 +1,4 @@
-const BASE_URL = "https://fullstackprojectbackend-production-cafb.up.railway.app";
+const BASE_URL = "https://fullstackprojectbackend-production-7ce7.up.railway.app";
 
 export const API = {
   login: `${BASE_URL}/login`,
